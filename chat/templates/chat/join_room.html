@@ -1,0 +1,191 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}Chats{% endblock %}
+
+{% block content %}
+
+{% if not all_rooms %}
+    <span class="container">You need to be friends with someone to chat.</span>
+{% endif %}
+<style>
+    .list-group-item {
+        background-color: rgba(255, 255, 255, 0.141)  !important;
+        color: #fff  !important;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+       
+    }
+    .bg {
+       border-radius: 20px;
+       overflow: hidden;
+       margin-top: 40px;
+    }
+    .text-name{
+        color: #fff ;
+    }
+    .list-group-item:hover .text-name,
+    .list-group-item:hover .mb-0,
+    .list-group-item:hover .fa,
+    .list-group-item:hover .text-muted {
+      color: #000;
+    }
+    .online-circle2 {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background-color: #42b72a;
+        border-radius: 50%;
+        margin-left: -5px;
+        border: px solid rgba(255, 255, 255, 0.141);
+        position: relative;
+        top:20px;
+        left:-13px;
+    }
+
+    .offline-circle2 {
+        position: relative;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background-color: #323030;
+        border-radius: 50%;
+        margin-left: -5px;
+        border: 1.5px solid rgba(255, 255, 255, 0.141);
+        top:20px;
+        left:-13px;
+
+    }
+</style>
+<div class="col-md-8" >
+    <!-- ALL CHATROOMS-->
+    <div class="px-0"  >
+        <div class="bg">
+            <div class="">
+                <div class="list-group rounded-0">
+                    {% regroup all_rooms by chats.all.last.date|date:"Y-m-d H:i:s" as room_list %}
+
+                    {% for date_group in room_list|dictsortreversed:"grouper" %}
+                        {% for friend in date_group.list %}
+                            {% if friend.friend == request.user %}   
+                                <div class="list-group-item list-group-item-action rounded-0">
+                                    <div class="media">
+                                        <div class="img-cont2">
+                                            <img src="{{friend.author.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                                            {% if friend.author.profile.is_online %}
+                                                <span class="online-circle2"></span>  
+                                            {% else %}
+                                                <span class="offline-circle2"></span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="media-body ml-4">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <h6 class="mb-0">
+                                                    {{friend.author}}
+                                                </h6>
+                                                <small class="small font-weight-bold">{{friend.chats.all.last.date|naturaltime}}</small>
+                                            </div>
+                                            <p class="font-italic text-name mb-0 text-small d-inline">
+                                                {% if friend.chats.all.last.text %}
+                                                    {% if friend.chats.all.last.author == request.user %}
+                                                        You: {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                                    {% else %}
+                                                        {{friend.chats.all.last.author}}: {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </p>
+                                          <div class="float-right d-inline" onclick="openChatLink('{% url 'room-choice' friend.author.pk %}')">
+    <a class="p-2 h5" href="{% url 'room-choice' friend.author.pk %}"><i class="fas fa-comment-alt"></i></a>
+    <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.author.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="list-group-item list-group-item-action list-group-item rounded-0">
+                                    <div class="media">
+                                        <div class="img-cont2">
+                                            <img src="{{friend.friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                                            {% if friend.friend.profile.is_online %}
+                                                <span class="online-circle2"></span>  
+                                            {% else %}
+                                                <span class="offline-circle2"></span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="media-body ml-4">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <h6 class="mb-0">
+                                                    {{friend.friend}}
+                                                </h6>
+                                                <small class="small font-weight-bold">{{friend.chats.all.last.date|naturaltime}}</small>
+                                            </div>
+                                            <p class="font-italic text-name mb-0 text-small d-inline">
+                                                {% if friend.chats.all.last.text %}
+                                                    {% if friend.chats.all.last.author == request.user %}
+                                                        You: {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                                    {% else %}
+                                                        {{friend.chats.all.last.author}}: {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </p>
+                                            <div class="float-right d-inline">
+                                                <a class="p-2 h5" href="{% url 'room-choice' friend.friend.pk %}"><i class="fas fa-comment-alt"></i></a>
+                                                <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.friend.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+
+<br>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+    <div class="content-section">
+        <h3 style="color: #fff; margin-top: 35px;">Friends ({{ all_friends.count }})</h3>
+        <br>
+        <ul class="list-group">
+            {% for frnd in all_friends %}
+                <li class="list-group-item list-group-item-light">{{ frnd }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    async function handleVCRedirect(id1, name) {
+        let room = id1;
+
+        let response = await fetch(`/vc/get_token/?channel=${room}`)
+
+        if (response.status == 200) {
+            let data = await response.json()
+
+            let UID = data.uid
+            let token = data.token
+            let room_name = data.room_name
+
+            sessionStorage.setItem('UID', UID)
+            sessionStorage.setItem('token', token)
+            sessionStorage.setItem('room', room_name)
+            sessionStorage.setItem('name', name)
+        
+            window.location.href = `/vc/${room}`
+        }
+    }
+</script>
+{% endblock %}

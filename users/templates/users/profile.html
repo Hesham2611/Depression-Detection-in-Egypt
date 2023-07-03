@@ -1,0 +1,179 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style>
+
+    
+    .content-section{
+    color: #ffffff;
+    margin-top: 30px;
+    }
+    .btn-info{
+        border-color: #393053;
+        color: #ffffff;
+        background-color: #393053;
+        }
+  
+        a:hover{
+      text-decoration: none;
+    }
+      .photo2{
+      position: relative;
+      margin:0 10px 0 10px;
+      width:200px;
+      height:200px;
+      left: 36%;
+      display: inline-block;
+    }
+    .text-name2{
+     
+      color: #ffffff;
+      text-transform: capitalize;
+      text-decoration: none;
+    }
+    .text-data{
+      position: relative;
+      font-weight:100;
+      font-size:small;
+      color: #ffffff;
+      top:-18px;
+    
+    }
+  
+    .article-title
+    { 
+      text-decoration: none;
+      color: #ffffff;
+  
+    }
+    .btn-info:hover{
+    background-color: #ffffff;
+    border-color:#393053 ;
+    }
+    .fa-camera{
+      position: relative;
+      left:35%;
+      top:70px;
+    }
+    .btn-outline-info {
+    border-color: #ffffff;
+    color: #FFFFFF;
+    }
+    .btn-outline-info:hover{
+    border-color: #393053;
+    color: #ffffff;
+    background-color: #393053;
+    }
+    
+  </style>
+
+
+<div class="col-md-8 m-auto">
+
+<div class="content-section">
+    
+      <div class="account-img-container">
+          <div class="img-cont">
+            <img class="rounded-circle account-img photo2" src="{{user.profile.image.url}}" alt="image">
+            <a class="notify-badge" onclick="picupload()">
+                <i class="fas fa-camera fa-xl" style="color: #ffffff;"></i>
+            </a>
+          </div>
+      </div>
+      <div class="card-body">
+          <hr>
+          
+          <h2 class="card-title text-center text-name2"> {{user.username}}</h2>
+          
+    
+          <hr>
+          <div class="m-t-10 p-20 text-center">
+              <div class="row">
+                  <div class="col">
+                      <span class="h6">Posts</span>
+                      <p><a class="mr-2 "style="  text-decoration: none; color: #FFFFFF;"href="{% url 'user-posts' user %}">{{user.profile.profile_posts.count}}</a></p>
+                  </div>
+                  <div class="col">
+                    <span class="h6">Friends</span>
+                    <p title="Friends">
+                        <a href="{% url 'friend:list' user.id %}" style="  text-decoration: none; color: #FFFFFF;">{{user.friends.all|length}}</a>
+                    </p>
+                  </div>
+                  <div class="col">
+                      <span class="h6">Followers</span>
+                      <p>{{user.fllowing.count}}</p>
+                  </div>
+                  <div class="col">
+                      <span class="h6">Following</span>
+                      <p>{{user.profile.following.count}}</p>
+                  </div>
+
+                  <div class="col">
+                    <span class="h6">Relatives</span>
+                    <p>{{user.profile.following_relatives.count}}</p>
+                </div>
+              </div>
+          </div>
+      </div>
+    
+    <form id="formUpload" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Profile Info</legend>
+            {{u_form|crispy}}
+            {{p_form|crispy}}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop the photo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> 
+        </div>
+        <div class="modal-body" style="max-width: 100%; overflow:auto">
+            <img style="max-height:100%; max-width: 100%" src="" id="image">
+        </div>
+        <div class="modal-footer">
+            <div class="float-left">
+                <button type="button" class="btn btn-primary js-zoom-in">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button type="button" class="btn btn-primary js-zoom-out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        function picupload(){
+            const imgf = document.getElementById('id_image')
+            imgf.click()
+        }
+    </script>
+{% endblock %}

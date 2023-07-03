@@ -1,0 +1,338 @@
+
+{% extends 'blog/base.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+
+<style>
+    div  .text-small{
+    word-break: break-word;
+    }
+ 
+    .bg {
+       border-radius: 20px;
+       overflow: hidden;
+       margin-top: 40px;
+    }
+    .photo{
+      position: relative;
+      width: 55px;
+      height: 55px;
+      top: 5px;
+      left: 15px;
+      display: inline-block;
+    }
+    .card{
+      margin-top: 20px;
+    }
+    .text-name{
+      position: absolute;
+      left:120px;
+      top:45px;
+      color: #ffffff;
+      text-transform: capitalize;
+      text-decoration: none;
+      
+    }
+    a:hover{
+      text-decoration: none;
+    }
+    .text-data{
+      
+      position: relative;
+      font-weight:100;
+      font-size:small;
+      color: #ffffff !important;
+      top:27px;
+      left:45px;
+ 
+    }
+    .card{
+     background-color: rgba(255, 255, 255, 0.141);
+     
+    }
+  
+    .no-gutters{
+      margin: 5px;
+      padding: 5px;
+    }
+    .text{
+      margin:5px;
+      padding-top:5px;
+      color: #ffffff;
+      text-transform: capitalize;
+      text-decoration: none;
+    }
+    .read-full{
+      text-decoration: none;
+      color: #1a1036;
+    }
+
+    .chat-container{
+        height :600px;
+        overflow :auto;
+        
+        
+    }
+
+
+.fa-paper-plane{
+    color: #1a1036;
+    
+}
+hr{
+    color: #ffffff;
+}
+.online-circle3 {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: green;
+  border: 2px solid rgba(255, 255, 255, 0.894);
+ top:8px;
+ left: 160px;
+}
+.offline-circle3 {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #373434;
+  border: 2px solid rgba(255, 255, 255, 0.894);
+  top:8px;
+ left: 160px;
+}
+.online-circle2 {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: green;
+  border: 2px solid rgba(255, 255, 255, 0.894);
+  top:30px;
+  left: 35px;
+}
+.offline-circle2 {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #373434;
+  border: 2px solid rgba(255, 255, 255, 0.894);
+  top:30px;
+  left: 35px;
+  
+
+}
+
+ input[type="text"] {
+    background-color: rgba(255, 255, 255, 0.413);
+   
+   
+    
+    color: #ffffff;
+ }
+
+
+::-webkit-scrollbar {
+  width: 10px;
+  
+}
+::-webkit-scrollbar-track {
+  background-color: darkgrey;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-thumb {
+ background: #393053;
+ border-radius: 20px;
+ 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1a1036;; 
+}
+
+  </style>
+<div class="col-md-8 m-auto">
+
+<div class="container content-section px-0 py-0">
+
+    <div class="bg-gray py-1 px-3" style="margin-top: 20px;">
+        <p class="h5 mb-0 py-2">
+            <span class="img-cont2">
+                <img src="{{friend_name.profile.image.url}}" alt="" width="50" height="50" class="rounded-circle photo">
+                {% if friend_name.profile.is_online %}
+                    <span class="online-circle3"></span>
+                {% else %}
+                    <span class="offline-circle3"></span>
+                {% endif %}
+            </span>
+
+            <h2 class="text-name">{{friend_name}}</h2>
+        </p>
+
+    </div>
+   
+    <hr>
+    <!-- Chat Box-->
+    <div id="chat-section " class="px-0 chat-container">
+        <div id="chat-box" class="chat-text-add py-5 px-4 chat-box bg">
+            <!-- OLD CHATS ARE FETCHED FROM DATABASE AND NEW ONES ARE APPENDED BELOW -->
+            {% for chat in old_chats %}
+                {% if chat.author != request.user %}
+        <!-- Sender Message-->
+        <div class="media w-75 mb-3">
+            {% if chat.author.profile.is_online %}
+            <span class="online-circle2"></span>
+            {% else %}
+            <span class="offline-circle2"></span>
+            {% endif %}
+            <img src="{{chat.author.profile.image.url}}" alt="{{friend_name}}" width="40" height="40" class="rounded-circle">
+            <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+                <p class="text-small mb-0 text-muted">{{chat.text}}</p>
+            </div>
+            <small class="text-white">{{chat.date}}</small>
+            </div>
+        </div>
+                
+                {% else %}
+
+                <!-- Reciever Message-->
+                <div class="media w-75 ml-auto mb-3">
+                <div class="media-body">
+                    <div class="bg-primary rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-white">{{chat.text}}</p>
+                    </div>
+                    <small class="text-white">{{chat.date}}</small>
+
+                </div>
+                </div>
+                
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+
+
+    <div class="px-0">
+        <!-- Typing area -->
+        <form class=" chat-form">
+          <div class="input-group">
+            <input id="input" name="body" type="text" placeholder="Type your message here" aria-describedby="submit" class="form-control rounded-0 border-0 py-4 b" autofocus>
+            <div class="input-group-append">
+                <button id="submit" type="button" class="btn btn-link " style="background-color: rgba(214, 207, 207, 0.787);"> <i class="fa fa-paper-plane fa-xl" ></i></button>
+            </div>
+          </div>
+        </form>
+    </div>
+
+</div>
+
+</div>
+
+<br>
+
+{% block script %}
+
+    {{ request.user.username|json_script:"user_username" }}
+    {{ room_name|json_script:"room-name" }}
+    {{ request.user.profile.image.url|json_script:"user_image"}}
+    <script>
+        document.querySelector('#input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('#submit').click();
+            }
+        });
+
+        let my_name = '{{ my_name }}';
+        const user_username = JSON.parse(document.getElementById('user_username').textContent);
+        const user_image = JSON.parse(document.getElementById('user_image').textContent);
+        document.querySelector('#submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#input');
+            const message = messageInputDom.value;
+            if(message.trim().length!=0) {
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': user_username,
+                    'user_image': user_image,
+                }));
+                messageInputDom.value = '';
+                messageInputDom.focus();
+            }
+            else{
+                alert("Message cannot be blank");
+                messageInputDom.focus();
+            }
+        };
+
+
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/' + roomName + '/'
+        );
+
+        // Function to automatically scroll down to the bottom of the chat box
+        function scrollToBottom() {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // When a message is received, add it to the chat box
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const message = data['message'];
+            const username = data['username'];
+            const user_image = data['user_image'];
+            const currentDate = new Date();
+            const dateString = currentDate.toLocaleString();
+
+            const chatBox = document.querySelector('#chat-box');
+            let newElement = document.createElement('div');
+            if (username === user_username) {
+                newElement.innerHTML = `
+                    <div class="media w-75 ml-auto mb-3">
+                    <div class="media-body">
+                        <div class="bg-primary rounded py-2 px-3 mb-2">
+                        <p class="text-small mb-0 text-white">${message}</p>
+                        </div>
+                        <p class="small text-muted">${dateString}</p>
+                    </div>
+                    </div>
+                `;
+            } else {
+                newElement.innerHTML = `
+                    <div class="media w-75 mb-3">
+                    <img src="${user_image}" alt="${username}" width="40" height="40" class="rounded-circle">
+                    <div class="media-body ml-3">
+                        <div class="bg-light rounded py-2 px-3 mb-2 ">
+                        <p class="text-small mb-0 text-muted">${message}</p>
+                        </div>
+                        <p class="small text-white">${dateString}</p>
+                    </div>
+                    </div>
+                `;
+            }
+            chatBox.appendChild(newElement);
+            scrollToBottom(); // Scroll to the bottom of the chat box
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+    </script>
+
+{% endblock %}
+
+{% endblock %}

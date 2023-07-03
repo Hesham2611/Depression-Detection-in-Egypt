@@ -1,0 +1,118 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Public-Profile{% endblock %}
+
+{% block content %}
+<style>
+
+    
+    .content-section{
+    margin-top: 30px;
+    
+    }
+    .btn{
+        border-color: #393053;
+        color: #ffffff;
+        background-color: #393053;
+        }
+  
+        a:hover{
+      text-decoration: none;
+    }
+      .photo2{
+      margin:0 10px 0 10px;
+      width:40px;
+      height:40px;
+     
+      display: inline-block;
+    }
+    .text-name2{
+     
+      color: #ffffff;
+      text-transform: capitalize;
+      text-decoration: none;
+    }
+    .text-data{
+      position: relative;
+      font-weight:100;
+      font-size:small;
+      color: #ffffff;
+      top:-18px;
+    
+    }
+  
+    .article-title
+    { 
+      text-decoration: none;
+      color: #ffffff;
+  
+    }
+    .btn-info:hover{
+    background-color: #ffffff;
+    border-color:#393053 ;
+    }
+    .card{
+      position: relative;
+top:30px;
+    }
+    
+    
+  </style>
+<div class="col-md-8 m-auto">
+    
+    <div class="card" style="width: 100%">
+        
+        <div class="account-img-container">
+            <div class="card h-100">
+				<img  class="card-img-top account-img " src="{{user.profile.image.url}}" alt="image">
+				<div class="card-body">
+					<div class="names">
+						<h2 class="card-title text-center text-name2" >{{object.user.first_name}} {{object.user.last_name}} {{object.user.username}}</h2>
+						{% if object.user.profile.is_online %}
+							<div class="online-circle3"></div>
+						{% else %}
+							<div class="offline-circle3"></div>
+						{% endif %}
+					</div>
+					<div class="biio">
+						<h5 class="bio ">Bio :</h5>
+						<p class="card-text text-black col-md-10 bio">{{object.user.profile.bio}}</p>
+					</div>
+					<div>
+						<h5 class="email">Email :</h5>
+						<p class="card-text col-md-8 email">{{object.user.email}}</p>
+					</div>
+					
+					
+                    <div>
+                        <ul class="social-links list-inline text-center m-4">
+                            <li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip"  href="https://www.facebook.com/profile.php?id=100009205047981" data-original-title="Facebook" target="_blank"><i class="fa-brands fa-xl fa-facebook-f" style="color: #393053;"></i></a></li>
+                            <li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip"  href="" data-original-title="Twitter" target="_blank"><i class="fa-brands fa-xl fa-twitter" style="color: #393053;"></i></a></li>
+                            <li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" href="" data-original-title="Skype" target="_blank"><i class="fa-brands fa-xl fa-instagram" style="color: #393053;"></i></a></li>
+                            <li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip"  href="" data-original-title="Linkedin"target="_blank"><i class="fa-brands fa-xl fa-linkedin-in" style="color: #393053;"></i></a></li>
+                        </ul>
+                    </div>
+			
+                    <div class="card-footer">
+                        {% if cuser.username == request.user.username %}
+                        <a onclick="copytoclip()" class="btn btn-primary float-right" >Copy Public URL</a>
+                        {% endif %}
+                    </div>
+		        </div>
+		    </div>
+	
+        </div>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        function copytoclip(){
+            navigator.clipboard.writeText("{{request.build_absolute_uri}}");
+            alert("URL copied to clipboard")
+        }
+    </script>
+{% endblock %}

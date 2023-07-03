@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Depressed Messages</h1>
+  {% if depressed_messages %}
+    <ul>
+    {% for message in depressed_messages %}
+      <li>{{ message.text }} ({{ message.timestamp }})</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>No depressed messages found.</p>
+  {% endif %}
+  {% endblock %}

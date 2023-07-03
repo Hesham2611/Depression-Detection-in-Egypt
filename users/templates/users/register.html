@@ -1,0 +1,232 @@
+
+{% load static %}
+
+{% block content %}
+
+
+<style type="text/css">
+
+input{
+	text-indent: 10px;
+}
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+	font-family: 'Inter', sans-serif;
+}
+
+body{
+   background-image:url( '/static/images/BsckgroundLogin.jpg' );
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+}
+
+
+
+
+  .form-signin{
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 500px;
+	height: 768px;
+	left:50%;
+	top: 78px;
+	background: rgba(255, 255, 255, 0.5);	
+	border-radius: 25px;
+  }
+
+  .onchat-text{
+	position: absolute;
+	width: 208px;
+	height: 23px;
+	left: 60px;
+	top: 30px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 800;
+	font-size: 20px;
+	line-height: 24px;
+	color: #230B68;
+	}
+
+	.create-an-account-text{
+	position: absolute;
+	width: 386px;
+	height: 51px;
+	left:40px;
+	top: 80px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 800;
+	font-size: 28px;
+	line-height: 34px;
+	color: #000000;
+}
+.form-signin input[type="text"] {
+    position: absolute;
+	width: 332px;
+	height: 42px;
+	left: 85px;
+	top:140px;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid #381E77;
+	border-radius: 16px;
+  }
+  
+  .form-signin input[type="email"] {
+    position: absolute;
+	width: 332px;
+	height: 42px;
+	left: 85px;
+	top:230px;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid #381E77;
+	border-radius: 16px;
+  }
+  ::placeholder{
+	padding: 10px;
+  }
+  .p1 {
+    margin-bottom: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+	box-sizing: border-box;
+	position: absolute;
+	width: 336px;
+	height: 42px;
+	left: 84px;
+	top:320px;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid #381E77;
+	border-radius: 16px;
+  }
+  .p2 {
+    margin-bottom: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+	box-sizing: border-box;
+	position: absolute;
+	width: 336px;
+	height: 42px;
+	left: 84px;
+	top:410px;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid #381E77;
+	border-radius: 16px;
+  }
+
+  .button-create-account{
+	position: absolute;
+	width: 170px;
+	height: 32px;
+	left: 84px;
+	top: 510px;
+	background: #381E77;
+	border: none;
+	border-radius: 18px;
+	color: #ffffffed;
+	font-weight:lighter;
+  }
+
+  .button-reset{
+	position: absolute;
+	width: 80px;
+	height: 32px;
+	left: 340px;
+	top: 510px;
+	background: #381E77;
+	border: none;
+	border-radius: 18px;
+	color: #ffffffed;
+	font-weight:lighter;
+  }
+  .d-create{
+	
+	position: absolute;
+	width: 319px;
+	height: 21px;
+	left: 90px;
+	top: 565px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 17px;
+	line-height: 21px;
+	color: #000000;
+ }
+ .line{
+	position: absolute;
+	width: 334px;
+	height: 0px;
+	left: 85px;
+	top: 555px;
+	border: 1px solid rgba(244, 232, 232, 0.147);
+	box-shadow: inset 0px -1px 0px rgba(245, 239, 239, 0.243);
+ }
+
+  .e{
+	position: absolute;
+	width: 360px;
+	top:590px;
+	left:95px;
+    color:red;
+ }
+ input::placeholder {
+	left: 50px;
+ 
+    
+}
+
+</style>
+
+<div class="container-fluid">
+	<div class="row justify-content-center ">
+		    <form class="form-signin" method="post">{% csrf_token %}
+				<a href="{% url 'blog-home' %}"><h4 class="onchat-text">OnChat</h4></a>
+				<h1 class="create-an-account-text">Create an account</h1>
+				<input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required>
+				<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+				<input type="password" name="password1" id="inputPassword1" class="form-control p1" placeholder="Password" required>
+				<input type="password" name="password2" id="inputPassword2" class="form-control p2" placeholder="Confirm password" required>
+				<div class="e">
+					{% for field in registration_form %}
+					<p>
+					{% for error in field.errors %}
+					<p style="color: red">{{ error }}</p>
+					{% endfor %}
+					</p>
+					{% endfor %}
+					{% if registration_form.non_field_errors %}
+					<div style="color: red">
+						<p>{{registration_form.non_field_errors}}</p>
+					</div>
+
+					{% endif %}
+			    </div>
+				<button class="button-create-account" type="submit" >Create account</button>
+				<button class="button-reset" type="reset">Reset</button>
+				<div class="line"></div>
+				<div class="d-create">
+					Do have an account?  &nbsp; <a class="m-auto " href="{% url 'login' %}" style="color: #230B68; font-weight: bold ;" >Login</a>
+				</div>
+				</form>
+	</div>
+</div>
+
+
+
+
+
+
+{% endblock content %}

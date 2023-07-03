@@ -1,0 +1,98 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Post{% endblock %}
+
+{% block content %}
+
+<style>
+    *{
+        color: #ffffff;
+    }
+    .photo{
+    position: absolute;
+    width:40px;
+    height:40px;
+    top: 10px;
+    left: 10px;
+    display: inline-block;
+  }
+  .text-name{
+    position: absolute;
+    left:60px;
+    top:10px;
+    color: #ffffff;
+    text-transform: capitalize;
+    text-decoration: none;
+  }
+   .text-data{
+    position: relative;
+    font-weight:100;
+    font-size:small;
+    color: #ffffff;
+    top:30px;
+    left:48px;
+  }
+
+  a:hover{
+    text-decoration: none;
+  }
+  .article-title
+  { 
+    text-decoration: none;
+    color: #ffffff;
+
+  }
+  .edit-icon{
+    position:relative;
+    right: 10;
+    top: -37px;
+  }
+</style>
+<div class="col-md-10 m-auto">
+    
+<article class="content-section" style="overflow: auto;">
+
+    <div class="media">
+        <img class="rounded-circle article-img photo" src="{{post.author.profile.image.url}}" alt="image">
+        <div class="media-body">
+            <h4 class="d-inline"><a class="mr-2 text-name" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a></h4>
+            <div id="save-section">
+                {% include 'blog/save_section.html' %}
+            </div>
+            <p><small class="text-data" >{{ post.date_posted|date:"F d, Y" }}</small></p>
+        </div>
+    </div>
+    <hr>
+    <div style="text-align: center;">
+    <h3 class="d-inline"><a class="article-title " href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+    </div>
+    {% if post.author == user %}
+        <div class="d-inline float-right edit-icon">
+           <a class="btn btnedit" href="{% url 'post-update' post.id %}"><i class="far fa-edit"></i></a>
+           <a class="btn btndel" href="{% url 'post-delete' post.id %}"><i class="far fa-trash-alt"></i></a>
+        </div>
+    {% endif %} 
+    
+
+    <hr>
+    <p class="article-content">{{ post.content|safe }}</p>
+</article>
+
+<div id="like-section">
+    {% include 'blog/like_section.html' %}
+</div>
+
+
+<hr>
+
+<div class="main-comment-section">
+    {% include 'blog/comments.html' %}
+</div>
+
+
+<br><br>
+
+</div>
+
+
+{% endblock %}

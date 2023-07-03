@@ -1,0 +1,119 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Liked Posts{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .content-section{
+    margin-top: 30px;
+    color: #ffffff;
+    }
+    a:hover{
+    text-decoration: none;
+  }
+    .photo2{
+    margin:0 10px 0 10px;
+    width:40px;
+    height:40px;
+   
+    display: inline-block;
+  }
+  .text-name2{
+   
+    color: #ffffff;
+    text-transform: capitalize;
+    text-decoration: none;
+  }
+  .text-data{
+    position: relative;
+    font-weight:100;
+    font-size:small;
+    color: #ffffff;
+    top:-18px;
+  
+  }
+  .title
+  { 
+    display: inline;
+    text-align: center;
+    text-decoration: none;
+    justify-content: center;
+    color: #ffffff;
+
+  }
+</style>
+
+<div class="col-md-8 m-auto">
+
+<div class="content-section">
+  <h3>Liked Posts ({{liked_posts|length}})</h3>
+</div>
+
+{% if not liked_posts %}
+  <p class="content-section">You have not liked any post</p>
+{% endif %}
+
+    {% for post in liked_posts %}
+
+    <article class="content-section" style="overflow: auto;">
+      <div class="media">
+          <img class="rounded-circle article-img photo2" src="{{post.author.profile.image.url}}" alt="image">
+          <div class="media-body">
+              <p>
+                <a class="mr-2 h4 text-name2" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a>
+              </p>
+              <small class="text-data">{{ post.date_posted|date:"F d, Y-h:i A" }}</small>
+          </div>
+      </div>
+      <hr>
+      <div style="text-align: center;">
+        <h3><a class="title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+      </div>
+      <hr>
+      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
+    </article>
+
+    {% endfor %}
+
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Last</a>
+      {% endif %}
+
+    {% endif %}
+
+</div>
+
+<!-- SIDEBAR
+<div class="col-md-4">
+  <div class="content-section">
+      <h3>Our Sidebar</h3>
+      <p class="text-muted">You can put any information here you'd like.
+          <ul class="list-group">
+              <li class="list-group-item list-group-item-light">Latest Posts</li>
+              <li class="list-group-item list-group-item-light">Announcements</li>
+              <li class="list-group-item list-group-item-light">Calendars</li>
+              <li class="list-group-item list-group-item-light">etc</li>
+          </ul>
+      </p>
+  </div>
+</div>   -->
+
+{% endblock %}

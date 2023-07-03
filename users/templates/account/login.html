@@ -1,0 +1,248 @@
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+{% block content %}
+
+
+<style type="text/css">
+	input   { text-indent: 10px; }
+
+	*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+	font-family: 'Inter', sans-serif;
+}
+
+body {
+        background-image:url( '/static/images/BsckgroundLogin.jpg' );
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+
+    }
+      
+
+
+  .form-signin{
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 500px;
+	height: 768px;
+	left:50%;
+	top: 78px; 
+	background: rgba(255, 255, 255, 0.5);	
+	border-radius: 25px;
+  }
+  
+  .form-signin input[type="username"] {
+	position: absolute;
+	width: 332px;
+	height: 42px;
+	left: 30px;
+	top:260px;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid #381E77;
+	border-radius: 16px;
+  }
+
+  .form-signin input[type="password"] {
+    margin-bottom: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+	box-sizing: border-box;
+	position: absolute;
+	width: 336px;
+	height: 42px;
+	left: 26px;
+	top:380px;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid #381E77;
+	border-radius: 16px;
+  }
+  ::placeholder{
+	padding: 10px;
+  }
+.button-sign-in {
+	position: absolute;
+	width: 120px;
+	height: 39px;
+	left: 64px;
+	top: 460px;
+	background: #381E77;
+	border-radius: 18px;
+	border: none; 
+	color: #ffffff8e;
+}
+
+.username-text {
+	position: absolute;
+	width: 111px;
+	height: 21px;
+	left: 43px;
+	top: 230px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 17px;
+	line-height: 21px;
+	color: #464A48;	
+}
+
+.password-text{
+	position: absolute;
+	width: 76px;
+	height: 21px;
+	left: 43px;
+	top: 350px;   
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 17px;
+	line-height: 21px;
+	color: #464A48;
+}
+
+.d-flex{
+	position: absolute;
+	width: 124px;
+	height: 18px;
+	left: 224px;
+	top: 350px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 15px;
+	line-height: 18px;
+	color: #230B68;
+}
+
+
+.signin-text{
+	position: absolute;
+	width: 171px;
+	height: 62px;
+	left: 58px;
+	top:145px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 800;
+	font-size: 51px;
+	line-height: 62px;
+	color: #000000;
+}
+
+.onchat-text{
+	position: absolute;
+	width: 161px;
+	height: 23px;
+	left: 51px;
+	top: 75px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 800;
+	font-size: 26px;
+	line-height: 31px;
+	color: #230B68;
+	}
+
+ .line{
+	position: absolute;
+	width: 334px;
+	height: 0px;
+	left: 30px;
+	top: 530px;
+	border: 1px solid rgba(244, 232, 232, 0.147);
+	box-shadow: inset 0px -1px 0px rgba(245, 239, 239, 0.243);
+ }
+ .d-create{
+	
+	position: absolute;
+	width: 319px;
+	height: 21px;
+	left: 43px;
+	top: 550px;
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 200;
+	font-size: 17px;
+	line-height: 21px;
+	color: #000000;
+ }
+
+ .e{
+	position: relative;
+	top:415px;
+	right:-30px;
+    color:red;
+ }
+ .sgo{
+	position: absolute;
+	left: 130px;
+	top: 600px;
+ }
+ .sgi{
+	position: absolute;
+	left: 200px;
+	top: 598px;
+ }
+ 
+</style>
+
+
+
+<div class="container-fluid">
+	<div class="row justify-content-center">
+		<div class="card card-signin">
+			<form class="form-signin" method="post">{% csrf_token %}	
+				<a href="{% url 'blog-home' %}"><h4 class="onchat-text">OnChat</h4></a>
+				<h1 class="signin-text">Sign in</h1>
+				<div class="form-label-group">
+					<label class="username-text" for="inputuser">Username</label>
+					<input type="username" id="inputuser" name="username" class="form-control" placeholder="Username" required autofocus>
+				</div>
+				<div class="form-label-group">
+					<label  class="password-text" for="inputPassword">Password</label>
+					<input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+				</div>
+				<a class="m-auto d-flex" href="{% url 'password_reset' %}">Forget Password?</a>
+				<button class="button-sign-in" type="submit">Sign in</button>
+                <div class="row">
+                    <div class="col-md-12 sgo"> 
+                        <a class="btn btn-lg btn-google btn-block btn-outline" href="{% provider_login_url 'google' %}">
+                            <img src="/static/images/google-icon.svg" width="40px"> 
+                        </a> 
+                    </div>
+                </div> <br>
+                <div class="row">
+                    <div class="col-md-12 sgi"> 
+                        <a class="btn btn-lg btn-google btn-block btn-outline" href="{% provider_login_url 'github' %}">
+                            <img src="/static/images/github-icon.svg" width="45px"/>
+                        </a> 
+                    </div>
+                </div> <br>
+				<div class="line"></div>
+				<div class="d-create">
+					Don’t have an account?<a class="m-auto " href="{% url 'register' %}" style="color: #230B68; font-weight: bold ;" > Create Account</a>
+				</div>
+			</form>
+		  
+		</div>
+		
+	</div>
+</div>
+
+
+
+
+
+
+{% endblock content %}

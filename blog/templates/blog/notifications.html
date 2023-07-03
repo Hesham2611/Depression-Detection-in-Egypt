@@ -1,0 +1,94 @@
+{% extends "blog/base.html" %}
+{% load humanize %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+
+
+<style>
+ 
+    ::-webkit-scrollbar {
+  width: 10px;
+  
+}
+::-webkit-scrollbar-track {
+  background-color: darkgrey;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-thumb {
+ background: #393053;
+ border-radius: 20px;
+ 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1a1036;; 
+}
+    .photo{
+    position: absolute;
+    width: 35px;
+    height:35px;
+    top: 10px;
+    left: 10px;
+    display: inline-block;
+  }
+  .text-name{
+    position: absolute;
+    left: 60px;
+    top:12px;
+    color: #ffffff;
+    text-transform: capitalize;
+    text-decoration: none;
+  }
+  .card{
+   background-color: rgba(255, 255, 255, 0.141) !important;
+   margin-top: 20px;
+  }
+  .text-data{
+    color: #ffffff;
+   
+  }
+  a:hover{
+    text-decoration: none;
+  }
+</style>
+{% if notifications|length == 0 %}
+    <span class="content-section container">No Notifications</span>
+{% endif %}
+
+<div class="col-md-8 m-auto">
+
+
+{% for notification in notifications %}
+    <div class="card text-white">
+        <div class="card-body">
+            <img class="rounded-circle article-img photo" src="{{notification.sender.profile.image.url}}" alt="image">
+            <span class="card-title h4"><a href="{% url 'profile-detail-view' notification.sender.id %}" class="text-name" >{{notification.sender}}</a></span>
+            <span class="text-muted float-right small"><p class="text-data">{{notification.date|naturaltime}}</p></span>
+            <br><br>
+            {% if notification.notification_type == 1 %}
+                <p class="card-text"><i class="far fa-thumbs-up" style="color: #ffffff;"></i>&nbsp;&nbsp;Liked your post "<a href="{% url 'post-detail' notification.post.id %}" >{{notification.post}}</a>"</p>
+            {% elif notification.notification_type == 2 %}
+                <p class="card-text"><i class="fas fa-user-friends" style="color: #ffffff;"></i>&nbsp;&nbsp;Started following you</p>
+            {% elif notification.notification_type == 3 %}
+                <p class="card-text"><i class="far fa-comment-dots" style="color: #ffffff;"></i>&nbsp;&nbsp;Commented "{{notification.text_preview}}" on your post "<a href="{% url 'post-detail' notification.post.id %}" >{{notification.post}}</a>"</p>
+            {% elif notification.notification_type == 4 %}
+                <p class="card-text"><i class="fas fa-reply" style="color: #ffffff;"></i>&nbsp;&nbsp;Replied "{{notification.text_preview}}" to a comment on your post "<a href="{% url 'post-detail' notification.post.id %}" >{{notification.post}}</a>"</p>
+            {% elif notification.notification_type == 7 %}
+                <p class="card-text"><i class="fas fa-user-friends" style="color: #ffffff;"></i>&nbsp;&nbsp;Started Relative with you</p>
+            {% elif notification.notification_type == 8 %}
+                <p class="card-text"><i class="fas fa-user-friends" style="color: #ffffff;"></i>&nbsp;&nbsp; has depression</p>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+{% endfor %}
+
+<br><br>
+
+</div>
+
+
+{% endblock %}

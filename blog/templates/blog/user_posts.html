@@ -1,0 +1,108 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+
+<style>
+  
+    .content-section{
+    margin-top: 30px;
+    }
+    .photo2{
+    margin:0 10px 0 10px;
+    width:40px;
+    height:40px;
+   
+    display: inline-block;
+  }
+  .text-name2{
+   
+    color: #ffffff;
+    text-transform: capitalize;
+    text-decoration: none;
+  }
+  .text-data{
+    position: relative;
+    font-weight:100;
+    font-size:small;
+    color: #ffffff;
+    top:-15px;
+    left:2px;
+  }
+  .article-title
+  { 
+    text-decoration: none;
+    color: #ffffff;
+
+  }
+  a:hover{
+    text-decoration: none;
+  }
+</style>
+<div class="col-md-8 m-auto text-white">
+
+<div class="content-section " >
+  <h2 class="mb-3">Posts by {{view.kwargs.username}} ({{page_obj.paginator.count}})</h2>
+</div>
+
+    {% for post in posts %}
+    <article class="content-section" style="overflow: auto;">
+      <div class="media">
+          <img class="rounded-circle article-img photo2" src="{{post.author.profile.image.url}}" alt="image">
+          <div class="media-body">
+              <h4><a class="mr-2 text-name2" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a></h4>
+              <small class="text-data " style="color: #FFFFFF;">{{ post.date_posted|date:"F d, Y" }}</small>
+          </div>
+      </div>
+      <hr>
+      <div style="text-align: center;">
+        <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+      </div>
+      <hr>
+      
+      <p class="article-content">{{ post.content|safe }}</p>
+    </article>
+    
+    {% endfor %}
+    
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Last</a>
+      {% endif %}
+
+    {% endif %}
+
+</div>
+
+<!-- SIDEBAR -->
+<!-- <div class="col-md-4">
+  <div class="content-section">
+      <h3>Our Sidebar</h3>
+      <p class="text-muted">You can put any information here you'd like.
+          <ul class="list-group">
+              <li class="list-group-item list-group-item-light">Latest Posts</li>
+              <li class="list-group-item list-group-item-light">Announcements</li>
+              <li class="list-group-item list-group-item-light">Calendars</li>
+              <li class="list-group-item list-group-item-light">etc</li>
+          </ul>
+      </p>
+  </div>
+</div>   -->
+
+{% endblock %}
